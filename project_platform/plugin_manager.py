@@ -1,4 +1,5 @@
 import importlib
+import importlib.metadata
 import inspect
 import pkgutil
 import sys
@@ -22,11 +23,11 @@ class PluginManager:
         if cls._instance is None:
             cls._instance = super().__new__(cls)
         return cls._instance
-    
+
     def __init__(self):
         if self._initialized:
             return
-        
+
         self._data_plugins: Dict[str, Type[DataSourcePlugin]] = {}
         self._visualizer_plugins: Dict[str, Type[VisualizerPlugin]] = {}
         self._loaded = False
@@ -36,50 +37,115 @@ class PluginManager:
         """Searches the 'plugins' directory for valid plugin packages and loads them."""
         if self._loaded:
             return
-                
+
         # Determine the path to the plugins directory
         current_file = Path(__file__).resolve()
         project_root = current_file.parent.parent
         plugins_dir = project_root / "plugins"
-        
+
         if not plugins_dir.exists():
             self._loaded = True
             return
-        
-        
+
         if str(plugins_dir) not in sys.path:
             sys.path.insert(0, str(plugins_dir))
-        
+
         plugin_folders = [f for f in plugins_dir.iterdir() if f.is_dir()]
-        
+
         if not plugin_folders:
             self._loaded = True
             return
-        
+
         for plugin_folder in plugin_folders:
             if not (plugin_folder / "__init__.py").exists():
                 continue    # skip if not a package
-            
+
             plugin_name = plugin_folder.name
-            
+
             try:
                 plugin_module = importlib.import_module(plugin_name)
-                
+
                 self._scan_package(plugin_module, plugin_name)
-                
+
             except Exception as e:
                 print(f"Error loading plugin '{plugin_name}': {e}")
 
+        # Učitaj i instalirane plugine (entry points)
+        self._load_installed_plugins()
+
         self._loaded = True
+
+    def _load_installed_plugins(self):
+        """
+        Pronalazi plugine iz INSTALIRANIH paketa (pip install -e .)
+        Koristi Python 'entry points' mehanizam
+        """
+        # --- UČITAJ DATA SOURCE PLUGINE ---
+        try:
+            # Pronađi sve entry points registrovane pod 'graph_platform.data_sources'
+            # entry_points() vraća sve registrovane entry points u sistemu
+            # .get('graph_platform.data_sources', []) traži samo te sa ovim imenom
+            data_eps = importlib.metadata.entry_points().get(
+                'graph_platform.data_sources', [])
+
+            for entry_point in data_eps:
+                try:
+                    # entry_point.load() poziva odgovarajuću klasu
+                    # npr. "json = json_plugin:JSONSource" → učita JSONSource klasu
+                    plugin_class = entry_point.load()
+
+                    # Kreiraj ključ sa prefiksom "installed." da razlikuješ
+                    # lokalne (plugin_name.ClassName) od instaliranih (installed.name)
+                    plugin_key = f"installed.{entry_point.name}"
+
+                    # Sačuvaj klasu u registar data source plugina
+                    self._data_plugins[plugin_key] = plugin_class
+
+                # Ako određeni entry point nije mogao biti učitan, isprintaj i nastavi
+                except Exception as e:
+                    print(f"Error loading entry point {entry_point.name}: {e}")
+
+        # Ako nema uopšte entry points (npr. nijedan paket nije instaliran),
+        # samo preskoči ovaj deo
+        except Exception:
+            pass
+
+        # --- UČITAJ VISUALIZER PLUGINE ---
+        try:
+            # Traži sve entry points za visualizer plugine
+            vis_eps = importlib.metadata.entry_points().get('graph_platform.visualizers', [])
+
+            for entry_point in vis_eps:
+                try:
+                    # Učitaj klasu
+                    plugin_class = entry_point.load()
+
+                    # Kreiraj ključ sa prefiksom "installed."
+                    plugin_key = f"installed.{entry_point.name}"
+
+                    # Sačuvaj klasu u registar visualizer plugina
+                    self._visualizer_plugins[plugin_key] = plugin_class
+
+                # Ako određeni entry point nije mogao biti učitan, isprintaj i nastavi
+                except Exception as e:
+                    print(f"Error loading entry point {entry_point.name}: {e}")
+
+        # Ako nema uopšte entry points, samo preskoči
+        except Exception:
+            pass
 
     def _scan_package(self, package, package_name):
         """Recursively scans a package for plugin classes"""
         if not hasattr(package, '__path__'):
             return
-            
+
         for _, module_name, is_pkg in pkgutil.iter_modules(package.__path__):
-            full_name = f"{package_name}.{module_name}"
+            # Skip setup.py and other non-plugin files
+            if module_name in ('setup', 'test', 'tests', '__main__'):
+                continue
             
+            full_name = f"{package_name}.{module_name}"
+
             try:
                 if is_pkg:
                     subpackage = importlib.import_module(full_name)
@@ -95,22 +161,22 @@ class PluginManager:
         for name, obj in inspect.getmembers(module):
             if not inspect.isclass(obj):
                 continue
-                
+
             try:
-                if (issubclass(obj, DataSourcePlugin) and 
-                    obj != DataSourcePlugin and 
-                    not inspect.isabstract(obj)):
-                    
+                if (issubclass(obj, DataSourcePlugin) and
+                    obj != DataSourcePlugin and
+                        not inspect.isabstract(obj)):
+
                     plugin_key = f"{module_name}.{name}"
                     self._data_plugins[plugin_key] = obj
-                
-                if (issubclass(obj, VisualizerPlugin) and 
-                    obj != VisualizerPlugin and 
-                    not inspect.isabstract(obj)):
-                    
+
+                if (issubclass(obj, VisualizerPlugin) and
+                    obj != VisualizerPlugin and
+                        not inspect.isabstract(obj)):
+
                     plugin_key = f"{module_name}.{name}"
                     self._visualizer_plugins[plugin_key] = obj
-                    
+
             except TypeError:
                 pass
             except Exception as e:
@@ -144,24 +210,24 @@ class PluginManager:
     def get_all_plugin_info(self) -> Dict:
         """Returns information about all loaded plugins"""
         self._load_plugins()
-        
+
         info = {
             'data_plugins': [],
             'visualizer_plugins': []
         }
-        
+
         for key, plugin_class in self._data_plugins.items():
             info['data_plugins'].append({
                 'key': key,
                 'class_name': plugin_class.__name__,
                 'module': key.rsplit('.', 1)[0]
             })
-        
+
         for key, plugin_class in self._visualizer_plugins.items():
             info['visualizer_plugins'].append({
                 'key': key,
                 'class_name': plugin_class.__name__,
                 'module': key.rsplit('.', 1)[0]
             })
-        
+
         return info

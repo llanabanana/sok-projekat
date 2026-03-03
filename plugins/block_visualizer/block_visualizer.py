@@ -69,7 +69,8 @@ class BlockVisualizer(VisualizerPlugin):
         edges_json = json.dumps(edges, ensure_ascii=False)
 
         # Load HTML template
-        template_path = os.path.join(os.path.dirname(__file__), 'templates', 'base.html')
+        template_path = os.path.join(os.path.dirname(
+            __file__), 'templates', 'base.html')
 
         try:
             with open(template_path, 'r', encoding='utf-8') as f:
@@ -79,5 +80,12 @@ class BlockVisualizer(VisualizerPlugin):
 
         html = template.replace('{{ NODES_JSON }}', nodes_json)
         html = html.replace('{{ EDGES_JSON }}', edges_json)
+
+        # Extract only the body content (remove <html>, <head>, <body> tags)
+        # Find content between <body> and </body>
+        import re
+        body_match = re.search(r'<body[^>]*>(.*?)</body>', html, re.DOTALL)
+        if body_match:
+            return body_match.group(1)
 
         return html
