@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="fc987e88-a40d-4adb-97de-499b50a83d06" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graph_explorer/viewer/static/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/graph_explorer/viewer/static/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/graph_explorer/viewer/static/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/graph_explorer/viewer/static/js/main.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/graph_explorer/viewer/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/graph_explorer/viewer/templates/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
