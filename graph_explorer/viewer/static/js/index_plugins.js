@@ -1,3 +1,45 @@
+function loadGraph() {
+    const selectElement = document.getElementById('plugin-select');
+    const pluginName = selectElement.value;
+    
+    if (!pluginName || pluginName === 'none') {
+        alert('Please select a plugin first');
+        return;
+    }
+    
+    const params = {};
+    
+    document.querySelectorAll('.param-field').forEach(input => {
+        params[input.name] = input.value;
+    });
+    
+    document.querySelectorAll('.checkbox-input').forEach(checkbox => {
+        params[checkbox.name] = checkbox.checked;
+    });
+    
+    fetch('/api/load-graph/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            plugin: pluginName,
+            parameters: params
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert(`Error: ${data.error}`);
+        } else {
+            alert(`Graph loaded successfully!\nNodes: ${data.node_count}\nEdges: ${data.edge_count}`);
+        }
+    })
+    .catch(error => {
+        alert('Error loading graph');
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     loadPlugins();
 });
@@ -95,7 +137,7 @@ function resetToDefaultInput() {
 function renderParameterInputs(pluginName, parameters) {
     const container = document.querySelector('.file-input-container');
     
-    let html = `<div class="plugin-params" data-plugin="${pluginName}">`;
+    let html = `<div class="plugin-params" data-plugin="${pluginName}"><div class="plugin-params-grid">`;
     
     parameters.forEach(param => {
         const inputId = `param-${param.name}`;
@@ -104,7 +146,7 @@ function renderParameterInputs(pluginName, parameters) {
         
         if (param.type === 'boolean') {
             html += `
-                <div class="param-input param-input-boolean">
+                <div class="param-input-boolean">
                     <label class="checkbox-label">
                         <input type="checkbox" id="${inputId}" name="${param.name}" 
                             ${defaultValue ? 'checked' : ''} class="checkbox-input">
@@ -127,7 +169,7 @@ function renderParameterInputs(pluginName, parameters) {
         }
     });
     
-    html += `
+    html += `</div>
         <button class="text-btn load-graph-btn" onclick="loadGraph()">
             Load Graph
         </button>
