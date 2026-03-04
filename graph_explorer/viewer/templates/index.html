@@ -4,9 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Viewer</title>
-<!--    {% load static %}-->
-<!--    <link rel="stylesheet" href="{% static 'css/style.css' %}" />-->
-      <link rel="stylesheet" href="../../../graph_explorer/viewer/static/css/style.css" />
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <!-- <link rel="stylesheet" href="../../../graph_explorer/viewer/static/css/style.css" /> -->
   </head>
   <body>
     <div class="app-container">
@@ -75,8 +75,10 @@
         </div>
     </div>
 
-    <!-- <script src="{% static 'js/main.js' %}"></script> -->
-     <script src="../../../graph_explorer/viewer/static/js/main.js"></script>
+    <script src="{% static 'js/index_filters.js' %}"></script>
+    <script src="{% static 'js/index_plugins.js' %}"></script>
+     <!-- <script src="../../../graph_explorer/viewer/static/js/index_filters.js"></script> -->
+     <!-- <script ></script> -->
   
   </body>
 </html>
