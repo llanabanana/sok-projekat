@@ -254,6 +254,14 @@ button:hover {
     min-height: 600px;  /* Minimum height */
 }
 
+.left-column-views {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: 100%;
+    min-height: 0;
+}
+
 /* ----- Right Column (Main View) ----- */
 .right-column-views {
     display: flex;
@@ -272,17 +280,21 @@ button:hover {
     border-radius: 24px;
     border: 2px solid;
     overflow: hidden;
-    min-height: 300px;
+    min-height: 0;
     background: #1a212e;
     box-shadow: 0 10px 20px -8px rgba(0,0,0,0.6);
     position: relative;
 }
 
+.tree-view-container,
+.bird-view-container {
+    flex: 1;
+}
+
 /* ----- View Labels (positioned absolute) ----- */
-.tree-view-container::before,
 .bird-view-container::before,
 .main-view-container::before {
-    content: "TREE VIEW";
+    content: "BIRD VIEW";
     position: absolute;
     top: 12px;
     left: 16px;
@@ -299,7 +311,6 @@ button:hover {
 }
 
 .bird-view-container::before {
-    content: "BIRD VIEW";
     background: rgba(0,0,0,0.6);
 }
 
@@ -309,11 +320,6 @@ button:hover {
 }
 
 /* ----- View-specific colors (with transparency) ----- */
-.tree-view-container {
-    border-color: #ff7b89;
-    background: rgba(255, 123, 137, 0.15);  /* Pink/red tint */
-}
-
 .bird-view-container {
     border-color: #7bafff;
     background: rgba(123, 175, 255, 0.15);  /* Blue tint */
@@ -325,35 +331,12 @@ button:hover {
 }
 
 /* ----- Hover effects ----- */
-.tree-view-container:hover {
-    background: rgba(255, 123, 137, 0.25);
-}
-
 .bird-view-container:hover {
     background: rgba(123, 175, 255, 0.25);
 }
 
 .main-view-container:hover {
     background: rgba(159, 123, 255, 0.25);
-}
-
-/* ===== TREE VIEW CONTENT ===== */
-.tree-view-container {
-    display: flex;
-    flex-direction: column;
-    padding: 60px 16px 16px 16px;
-}
-
-.tree-view-container::after {
-    white-space: pre;
-    font-family: 'JetBrains Mono', 'SF Mono', monospace;
-    font-size: 0.9rem;
-    color: #e3eaff;
-    line-height: 1.6;
-    background: #10161f;
-    padding: 20px;
-    border-radius: 16px;
-    border: 1px solid #2b354a;
 }
 
 /* ===== BIRD VIEW CONTENT ===== */
