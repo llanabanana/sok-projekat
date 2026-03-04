@@ -1,21 +1,401 @@
-/* Graph Visualization Platform Styles */
-body {
-    font-family: Arial, sans-serif;
+/* style.css - Graph Visualizer sa slike */
+
+/* Reset i osnovni stilovi */
+* {
     margin: 0;
-    padding: 20px;
-    background-color: #f5f5f5;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    background: white;
+body {
+    background: #1a1f2b;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-h1 {
-    color: #333;
-    margin-top: 0;
+.app-container {
+    max-width: 1600px;
+    width: 100%;
+    background: #0f1219;
+    border-radius: 28px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(75, 130, 200, 0.15);
+    padding: 24px;
+}
+
+/* HEADER sekcija */
+.header {
+    margin-bottom: 24px;
+}
+
+.view-chooser {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    margin-bottom: 24px;
+    padding-left: 8px;
+}
+
+.view-chooser .title {
+    font-weight: 600;
+    font-size: 1.9rem;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #bdd3ff, #a0c0ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.view-chooser ul {
+    display: flex;
+    gap: 30px;
+    list-style: none;
+    background: #1a212e;
+    padding: 8px 16px;
+    border-radius: 40px;
+    border: 1px solid #2b3447;
+}
+
+.view-chooser li {
+    display: flex;
+    align-items: center;
+}
+
+.view-chooser input[type="radio"] {
+    margin-right: 8px;
+    accent-color: #6d8ae0;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.view-chooser label {
+    color: #ccdfff;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+/* Filters container */
+.filters-container {
+    background: #1a212e;
+    border: 1px solid #2b3447;
+    border-radius: 24px;
+    padding: 20px;
+}
+
+.file-input-container,
+.search-input-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.file-input-container input,
+.search-input-container input,
+.filter-container input,
+.filter-container select {
+    background: #10161f;
+    border: 1px solid #2b354a;
+    border-radius: 12px;
+    padding: 12px 16px;
+    color: #e3eaff;
+    font-size: 0.95rem;
+    flex: 1;
+}
+
+.file-input-container input::placeholder,
+.search-input-container input::placeholder,
+.filter-container input::placeholder {
+    color: #5f6f8c;
+}
+
+.file-input-container button,
+.search-input-container button {
+    background: #252e3f;
+    border: 1px solid #3d4a64;
+    border-radius: 12px;
+    padding: 12px 24px;
+    color: #ccdfff;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.file-input-container button:hover,
+.search-input-container button:hover {
+    background: #2f3b52;
+    border-color: #5f7bbf;
+}
+
+/* Filter red (attribute, relation, value) */
+.filter-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.filter-container input:first-of-type {
+    flex: 2;
+}
+
+.filter-container select {
+    flex: 1;
+    min-width: 80px;
+    cursor: pointer;
+}
+
+.filter-container input:last-of-type {
+    flex: 2;
+}
+
+/* Applied filters */
+.applied-filters-container {
+    background: #0c121c;
+    border-radius: 16px;
+    padding: 16px;
+    border: 1px solid #2a3448;
+}
+
+.applied-filters-container > span {
+    display: block;
+    color: #8f9bb5;
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.applied-filter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #1f2a3f;
+    border: 1px solid #3f5270;
+    border-radius: 30px;
+    padding: 8px 16px;
+    width: fit-content;
+    min-width: 180px;
+}
+
+.applied-filter .text-part {
+    color: #b3ceff;
+    font-size: 0.95rem;
+}
+
+.remove-applied-filter-btn {
+    background: #2f3e60;
+    border: none;
+    color: #ccdfff;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.remove-applied-filter-btn:hover {
+    background: #4f6085;
+    color: white;
+}
+
+/* VIEWS CONTAINER - glavni grid sa 2 kolone */
+.views-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 20px;
+    margin-top: 24px;
+}
+
+/* Leva kolona - sadrži Tree i Bird view */
+.left-column-views {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Desna kolona - Main view */
+.right-column-views {
+    display: flex;
+}
+
+/* Zajednički stilovi za sve view containere */
+.tree-view-container,
+.bird-view-container,
+.main-view-container {
+    border-radius: 24px;
+    border: 2px solid;
+    overflow: hidden;
+    min-height: 300px;
+    background: #1a212e;  /* padajuća boja */
+    box-shadow: 0 10px 20px -8px rgba(0,0,0,0.6);
+    position: relative;
+}
+
+/* Dodajemo natpis za svaki view da se zna koji je */
+.tree-view-container::before,
+.bird-view-container::before,
+.main-view-container::before {
+    content: "TREE VIEW";
+    position: absolute;
+    top: 12px;
+    left: 16px;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    z-index: 10;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.bird-view-container::before {
+    content: "BIRD VIEW";
+    background: rgba(0,0,0,0.6);
+}
+
+.main-view-container::before {
+    content: "MAIN VIEW";
+    background: rgba(0,0,0,0.6);
+}
+
+/* RAZLIČITE BOJE ZA SVAKI VIEW - sa providnošću */
+.tree-view-container {
+    border-color: #ff7b89;
+    background: rgba(255, 123, 137, 0.15);  /* roze/crevena nijansa */
+}
+
+.bird-view-container {
+    border-color: #7bafff;
+    background: rgba(123, 175, 255, 0.15);  /* plava nijansa */
+}
+
+.main-view-container {
+    border-color: #9f7bff;
+    background: rgba(159, 123, 255, 0.15);  /* ljubičasta nijansa */
+}
+
+/* Hover efekat za jasnije boje */
+.tree-view-container:hover {
+    background: rgba(255, 123, 137, 0.25);
+}
+
+.bird-view-container:hover {
+    background: rgba(123, 175, 255, 0.25);
+}
+
+.main-view-container:hover {
+    background: rgba(159, 123, 255, 0.25);
+}
+
+/* Sadržaj view-ova (placeholder) - dodajemo primere kao na slici */
+.tree-view-container {
+    display: flex;
+    flex-direction: column;
+    padding: 60px 16px 16px 16px;  /* ostavljamo mesto za natpis */
+}
+
+/* Dodajemo mock podatke za Tree View */
+.tree-view-container::after {
+    content: "ID 1\A  - Name: Alice\A  - Age: 45\A  - Gender: F\A  - Race: White\A \A ID 2\A  - Name: Nicole\A  - Age: 21\A  - Gender: F\A  - Race: White\A \A ID 3 + ID 4\A \A ID 1\A  - Name: Alice\A  - Age: 45\A  - Gender: F\A  - Race: White\A \A ID 2\A  - Name: Nicole\A  - Age: 21\A  - Gender: F\A  - Race: White\A \A ID 3\A  - Name: Jane\A  - Age: 22\A  - Gender: F\A  - Race: White";
+    white-space: pre;
+    font-family: 'JetBrains Mono', 'SF Mono', monospace;
+    font-size: 0.9rem;
+    color: #e3eaff;
+    line-height: 1.6;
+    background: #10161f;
+    padding: 20px;
+    border-radius: 16px;
+    border: 1px solid #2b354a;
+}
+
+/* Mock podaci za Bird View */
+.bird-view-container {
+    padding: 60px 16px 16px 16px;
+}
+
+.bird-view-container::after {
+    content: "ID 1    ID 2\A Name: Alice  Name: Nicole\A Age: 45     Age: 21\A Gender: F   Gender: F\A Race: White Race: White\A \A ID 3    ID 4\A Name: Emma   Name: Ella\A Age: 53     Age: 22\A Gender: F   Gender: F\A Race: White Race: White";
+    white-space: pre;
+    font-family: 'JetBrains Mono', 'SF Mono', monospace;
+    font-size: 0.9rem;
+    color: #e3eaff;
+    line-height: 1.8;
+    background: #10161f;
+    padding: 20px;
+    border-radius: 16px;
+    border: 1px solid #2b354a;
+    display: grid;
+}
+
+/* Mock podaci za Main View */
+.main-view-container {
+    padding: 60px 16px 16px 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-view-container::after {
+    content: "⭘ ID 1 (Alice, 45)  ———  ⭘ ID 2 (Nicole, 21)\A \A ⭘ ID 3 (Emma, 53)  ———  ⭘ ID 4 (Ella, 22)";
+    white-space: pre;
+    font-family: 'JetBrains Mono', 'SF Mono', monospace;
+    font-size: 1rem;
+    color: #e3eaff;
+    line-height: 2.5;
+    background: #10161f;
+    padding: 30px 20px;
+    border-radius: 22px;
+    border: 1px solid #2e3850;
+    text-align: center;
+    letter-spacing: 1px;
+    box-shadow: inset 0 2px 3px rgba(0,0,0,0.6);
+    flex: 1;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+    .views-container {
+        grid-template-columns: 1fr;
+    }
+
+    .view-chooser {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .filter-container {
+        flex-wrap: wrap;
+    }
+
+    .filter-container input,
+    .filter-container select {
+        flex: 1 1 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .app-container {
+        padding: 16px;
+    }
+
+    .view-chooser ul {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .file-input-container,
+    .search-input-container {
+        flex-direction: column;
+    }
 }
