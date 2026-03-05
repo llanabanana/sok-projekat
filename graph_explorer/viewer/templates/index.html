@@ -33,6 +33,18 @@
                 </ul>
             </div>
             <div class="filters-container">
+                <div worspace-container>
+                    <div class="workspace-header">
+                        <span class="workspace-label">Workspaces:</span>
+                        <div class="workspace-actions">
+                            <button class="workspace-btn new-workspace-btn" onclick="createNewWorkspace()">New workspace</button>
+                            <button class="workspace-btn save-workspace-btn" onclick="saveWorkspace()">Save workspace state</button>
+                        </div>
+                    </div>
+                    <div class="workspace-list" id="workspace-list">
+                            <!-- Workspace bubbles will be added dynamically -->
+                    </div>
+                </div>
                 <div class="file-input-container">
                     
                 </div>
@@ -80,6 +92,7 @@
     <!-- <script src="../../../graph_explorer/viewer/static/js/main.js"></script> -->
     <script src="{% static 'js/index_filters.js' %}"></script>
     <script src="{% static 'js/index_plugins.js' %}"></script>
+    <script src="{% static 'js/index_workspace.js' %}"></script>
      <!-- <script src="../../../graph_explorer/viewer/static/js/index_filters.js"></script> -->
   
   </body>
