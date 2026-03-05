@@ -5,4 +5,5 @@ app_name = 'viewer'
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('graph-data/', views.graph_data, name='graph_data'),
 ]

@@ -1,5 +1,27 @@
-searches = [];
-filters = [];
+let searches = [];
+let filters = [];
+window.APP_GRAPH_DATA = { nodes: {}, edges: [] };
+
+function publishGraphData(graphData) {
+    window.APP_GRAPH_DATA = graphData || { nodes: {}, edges: [] };
+    window.dispatchEvent(new CustomEvent('graphDataLoaded', {
+        detail: window.APP_GRAPH_DATA
+    }));
+}
+
+async function loadGraphData() {
+    try {
+        const response = await fetch('/graph-data/');
+        if (!response.ok) {
+            throw new Error('Failed to load graph data');
+        }
+
+        const data = await response.json();
+        publishGraphData(data);
+    } catch (error) {
+        publishGraphData(window.TEST_GRAPH_DATA || { nodes: {}, edges: [] });
+    }
+}
 
 function getSearchText() {
     const searchInput = document.getElementById('word-search-input').value.trim();
@@ -153,8 +175,43 @@ function setupFilterInputs() {
     }
 }
 
+function setupViewChooser() {
+    const simpleRadio = document.getElementById('simple-view-radio');
+    const blockRadio = document.getElementById('block-view-radio');
+
+    if (!simpleRadio || !blockRadio || typeof treeState === 'undefined') {
+        return;
+    }
+
+    if (!simpleRadio.checked && !blockRadio.checked) {
+        simpleRadio.checked = true;
+    }
+
+    treeState.selectedView = blockRadio.checked ? 'block-view' : 'simple-view';
+
+    simpleRadio.addEventListener('change', function () {
+        if (simpleRadio.checked) {
+            treeState.selectedView = 'simple-view';
+            if (typeof renderTreeView === 'function') {
+                renderTreeView();
+            }
+        }
+    });
+
+    blockRadio.addEventListener('change', function () {
+        if (blockRadio.checked) {
+            treeState.selectedView = 'block-view';
+            if (typeof renderTreeView === 'function') {
+                renderTreeView();
+            }
+        }
+    });
+}
+
 // Setup event listener for when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', setupFilterInputs);
+document.addEventListener('DOMContentLoaded', setupViewChooser);
+document.addEventListener('DOMContentLoaded', loadGraphData);
 
 function testFunction() {
     console.log('Test function called');
