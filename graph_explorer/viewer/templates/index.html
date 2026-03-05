@@ -12,39 +12,65 @@
   </head>
   <body>
     <div class="app-container">
-      <div class="header">
-        <div class="view-chooser">
-          <span class="title"> Graph Visualizer </span>
-          <ul class="view-mode-chooser">
-            <li>
-              <input
-                type="radio"
-                id="simple-view-radio"
-                name="view-choice"
-                value="simple-view"
-                checked
-              />
-              <label for="simple-view-radio">Simple View</label><br />
-            </li>
-            <li>
-              <input
-                type="radio"
-                id="block-view-radio"
-                name="view-choice"
-                value="block-view"
-              />
-              <label for="block-view-radio">Block View</label><br />
-            </li>
-          </ul>
-          <ul class="plugin-chooser">
-            <select
-              name="plugin"
-              id="plugin-select"
-              onchange="handlePluginSelection()"
-            >
-              <option value="none">Select datasource plugin...</option>
-            </select>
-          </ul>
+        <div class="header">
+            <div class="view-chooser">
+                <span class="title">
+                    Graph Visualizer
+                </span>
+                <ul class="view-mode-chooser">
+                    <li>
+                        <input type="radio" id="simple-view-radio" name="view-choice" value="simple-view" checked>
+                        <label for="simple-view-radio">Simple View</label><br>
+                    </li>
+                    <li>
+                        <input type="radio" id="block-view-radio" name="view-choice" value="block-view">
+                        <label for="block-view-radio">Block View</label><br>
+                    </li>
+                </ul>
+                <ul class="plugin-chooser">
+                    <select name="plugin" id="plugin-select" onchange="handlePluginSelection()">
+                        <option value="none">Select datasource plugin...</option>
+                    </select>
+                </ul>
+            </div>
+            <div class="filters-container">
+                <div worspace-container>
+                    <div class="workspace-header">
+                        <span class="workspace-label">Workspaces:</span>
+                        <div class="workspace-actions">
+                            <button class="workspace-btn new-workspace-btn" onclick="createNewWorkspace()">New workspace</button>
+                            <button class="workspace-btn save-workspace-btn" onclick="saveWorkspace()">Save workspace state</button>
+                        </div>
+                    </div>
+                    <div class="workspace-list" id="workspace-list">
+                            <!-- Workspace bubbles will be added dynamically -->
+                    </div>
+                </div>
+                <div class="file-input-container">
+                    
+                </div>
+                <div class="search-input-container">
+                    <input type="text" id="word-search-input" placeholder="Search...">
+                    <button class="text-btn" onclick="addSearch()">Search</button>
+                </div>
+                <div class="filter-container">
+                    <input type="text" id="attribute-name-input" placeholder="Enter attribute name...">
+                    <select id="relation-input" name="relation-input">
+                      <option value="==">==</option>
+                      <option value=">=">>=</option>
+                      <option value=">">></option>
+                      <option value="<"><</option>
+                      <option value="<="><=</option>
+                      <option value="!=">!=</option>
+                    </select>
+                    <input type="text" id="attribute-value-input" placeholder="Enter attribute value...">
+                    <button class="text-btn" onclick="addFilter()">Apply</button>
+                </div>
+                <div class="applied-filters-container">
+                    <span>Applied filters</span>
+                    
+                </div>
+            </div>
         </div>
         <div class="filters-container">
           <div class="file-input-container"></div>
@@ -94,6 +120,8 @@
     <script src="{% static 'js/index_filters.js' %}"></script>
     <!-- <script src="{% static 'js/main_bird_view.js' %}"></script> -->
     <script src="{% static 'js/index_plugins.js' %}"></script>
-    <!-- <script src="../../../graph_explorer/viewer/static/js/index_filters.js"></script> -->
+    <script src="{% static 'js/index_workspace.js' %}"></script>
+     <!-- <script src="../../../graph_explorer/viewer/static/js/index_filters.js"></script> -->
+  
   </body>
 </html>
