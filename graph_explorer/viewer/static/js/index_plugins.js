@@ -1,14 +1,14 @@
 function loadGraph() {
     const selectElement = document.getElementById('plugin-select');
     const dataSource = selectElement.value;
-    
+
     const visualizer = document.querySelector('input[name="view-choice"]:checked').value;
-    
+
     if (!dataSource || dataSource === 'none') {
         alert('Please select a plugin first');
         return;
     }
-    
+
     const params = {};
     document.querySelectorAll('.param-field').forEach(input => {
         params[input.name] = input.value;
@@ -16,13 +16,13 @@ function loadGraph() {
     document.querySelectorAll('.checkbox-input').forEach(checkbox => {
         params[checkbox.name] = checkbox.checked;
     });
-    
+
     console.log('Sending:', {
         plugin: dataSource,
         visualizer: visualizer,
         parameters: params
     });
-    
+
     fetch('/api/load-graph/', {
         method: 'POST',
         headers: {
@@ -56,43 +56,52 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function loadPlugins() {
-    const selectElement = document.getElementById('plugin-select');
-    
+    const selectDataSource = document.getElementById('plugin-select');
+    const selectVisualizer = document.getElementById('visualizer-plugin-select');
+
     // send requst to backend to get list of plugins
     fetch('/api/plugins/')
         .then(response => response.json())
         .then(pluginNames => {
             console.log('Primljeni pluginovi:', pluginNames);
-            
+
             // clear existing options
-            selectElement.innerHTML = '<option value="none">Select datasource plugin...</option>';
-            
+            selectDataSource.innerHTML = '<option value="none">Select datasource plugin...</option>';
+            selectVisualizer.innerHTML = '<option value="none">Select visualizer plugin...</option>';
+
             // populate select with plugin names
-            pluginNames.forEach(pluginName => {
+            pluginNames.data_source_plugins.forEach(pluginName => {
                 const option = document.createElement('option');
                 option.value = pluginName;
                 option.textContent = pluginName;
-                selectElement.appendChild(option);
+                selectDataSource.appendChild(option);
+            });
+
+            pluginNames.visualizer_plugins.forEach(pluginName => {
+                const option = document.createElement('option');
+                option.value = pluginName;
+                option.textContent = pluginName;
+                selectVisualizer.appendChild(option);
             });
         })
         .catch(error => {
             console.error('Greška:', error);
-            selectElement.innerHTML = '<option value="none">Error loading plugins</option>';
+            selectDataSource.innerHTML = '<option value="none">Error loading plugins</option>';
         });
 }
 
-function handlePluginSelection() {
+function handleDataSourcePluginSelection() {
     const selectElement = document.getElementById('plugin-select');
     const selectedPlugin = selectElement.value;
-    
+
     if (!selectedPlugin || selectedPlugin === 'none') {
         console.log('Nije izabran validan plugin');
         resetToDefaultInput();
         return;
     }
-    
+
     console.log('Izabrani plugin:', selectedPlugin);
-    
+
     // send request to backend to get parameters for selected plugin
     fetch(`/api/plugins/${selectedPlugin}/parameters/`)
         .then(response => {
@@ -147,19 +156,19 @@ function resetToDefaultInput() {
 
 function renderParameterInputs(pluginName, parameters) {
     const container = document.querySelector('.file-input-container');
-    
+
     let html = `<div class="plugin-params" data-plugin="${pluginName}"><div class="plugin-params-grid">`;
-    
+
     parameters.forEach(param => {
         const inputId = `param-${param.name}`;
         const required = param.required ? 'required' : '';
         const defaultValue = param.default !== undefined ? param.default : '';
-        
+
         if (param.type === 'boolean') {
             html += `
                 <div class="param-input-boolean">
                     <label class="checkbox-label">
-                        <input type="checkbox" id="${inputId}" name="${param.name}" 
+                        <input type="checkbox" id="${inputId}" name="${param.name}"
                             ${defaultValue ? 'checked' : ''} class="checkbox-input">
                         <span class="param-name">${param.name} ${param.required ? '*' : ''}</span>
                     </label>
@@ -168,8 +177,8 @@ function renderParameterInputs(pluginName, parameters) {
         } else {
             html += `
                 <div class="param-input">
-                    <input type="${param.type === 'number' ? 'number' : 'text'}" 
-                        id="${inputId}" 
+                    <input type="${param.type === 'number' ? 'number' : 'text'}"
+                        id="${inputId}"
                         name="${param.name}"
                         placeholder="${param.name}"
                         value="${defaultValue}"
@@ -179,13 +188,13 @@ function renderParameterInputs(pluginName, parameters) {
             `;
         }
     });
-    
+
     html += `</div>
         <button class="text-btn load-graph-btn" onclick="loadGraph()">
             Load Graph
         </button>
     </div>`;
-    
+
     container.innerHTML = html;
 }
 

@@ -47,9 +47,14 @@ def graph_data(request):
 
 def list_plugins(request):
     # getting all plugin names from the GraphPlatform
-    plugins = GraphPlatform().get_data_source_plugins()
+    data_source_plugins = GraphPlatform().get_data_source_plugins()
+    visualizer_plugins = GraphPlatform().get_visualizer_plugins()
     # safe=False allows us to return a list instead of a dict
-    return JsonResponse(plugins, safe=False)
+    response = {
+        'data_source_plugins': data_source_plugins,
+        'visualizer_plugins': visualizer_plugins,
+    }
+    return JsonResponse(response)
 
 
 def get_data_plugin_parameters(request, plugin_name):
