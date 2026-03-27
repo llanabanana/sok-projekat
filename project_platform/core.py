@@ -49,19 +49,10 @@ class GraphPlatform:
         self.current_graph = graph
         self.current_data_plugin = data_source_plugin_name
         
-        visualizer_map = {
-            "simple-view": "simple",   
-            "block-view": "block"      
-        }
-        
-        visualizer_key = visualizer_map.get(visualizer_plugin_name)
-        if not visualizer_key:
-            raise ValueError(f"Unknown visualizer: {visualizer_plugin_name}")
-        
         # 4. Get visualizer class
-        visualizer_class = self.plugin_manager.get_visualizer_plugin_class(visualizer_key)
+        visualizer_class = self.plugin_manager.get_visualizer_plugin_class(visualizer_plugin_name)
         if not visualizer_class:
-            raise ValueError(f"Visualizer plugin not found: {visualizer_key}")
+            raise ValueError(f"Visualizer plugin not found: {visualizer_plugin_name}")
         
         # 5. Instance visualizer and store it
         try:

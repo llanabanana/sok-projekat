@@ -14,29 +14,13 @@
       <div class="header">
         <div class="view-chooser">
           <span class="title">Graph Visualizer</span>
-          <ul class="view-mode-chooser">
-            <li>
-              <input
-                type="radio"
-                id="simple-view-radio"
-                name="view-choice"
-                value="simple-view"
-                checked
-              />
-              <label for="simple-view-radio">Simple View</label>
-            </li>
-            <li>
-              <input
-                type="radio"
-                id="block-view-radio"
-                name="view-choice"
-                value="block-view"
-              />
-              <label for="block-view-radio">Block View</label>
-            </li>
+          <ul class="plugin-chooser">
+            <select name="visualizer-plugin" id="visualizer-plugin-select" onchange="handleVisualizerPluginSelection()">
+              <option value="none">Select visualizer plugin...</option>
+            </select>
           </ul>
           <ul class="plugin-chooser">
-            <select name="plugin" id="plugin-select" onchange="handlePluginSelection()">
+            <select name="plugin" id="plugin-select" onchange="handleDataSourcePluginSelection()">
               <option value="none">Select datasource plugin...</option>
             </select>
           </ul>
@@ -63,7 +47,7 @@
           <div class="file-input-container">
             <!-- File input will be added here dynamically -->
           </div>
-          
+
           <div class="search-input-container">
             <input
               type="text"
