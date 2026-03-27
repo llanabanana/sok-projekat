@@ -79,7 +79,7 @@ def load_graph(request):
         data = json.loads(request.body)
 
         data_source = data.get('plugin')
-        visualizer = data.get('visualizer', 'simple-view')
+        visualizer = data.get('visualizer')
         parameters = data.get('parameters', {})
 
         platform = GraphPlatform()

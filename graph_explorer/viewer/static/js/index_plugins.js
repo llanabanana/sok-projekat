@@ -1,8 +1,9 @@
 function loadGraph() {
-    const selectElement = document.getElementById('plugin-select');
-    const dataSource = selectElement.value;
+    const dataSourceSelect = document.getElementById('plugin-select');
+    const dataSource = dataSourceSelect.value;
 
-    const visualizer = document.querySelector('input[name="view-choice"]:checked').value;
+    const visualizerSelect = document.getElementById('visualizer-plugin-select');
+    const visualizer = visualizerSelect.value;
 
     if (!dataSource || dataSource === 'none') {
         alert('Please select a plugin first');
