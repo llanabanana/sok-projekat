@@ -1,0 +1,97 @@
+/* view-chooser.css */
+.view-chooser {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    margin-bottom: 24px;
+    padding-left: 8px;
+}
+
+.view-chooser .title {
+    font-weight: 600;
+    font-size: 1.9rem;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #bdd3ff, #a0c0ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.view-chooser ul {
+    display: flex;
+    gap: 30px;
+    list-style: none;
+    background: #1a212e;
+    padding: 8px 16px;
+    border-radius: 40px;
+    border: 1px solid #2b3447;
+}
+
+.view-chooser li {
+    display: flex;
+    align-items: center;
+}
+
+.view-chooser input[type="radio"] {
+    margin-right: 8px;
+    accent-color: #6d8ae0;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.view-chooser label {
+    color: #ccdfff;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+/* Plugin selectors - unified style for both datasource and visualizer plugins */
+.plugin-chooser,
+.visualizer-plugin-chooser {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    background: #1a212e;
+    border-radius: 40px;
+    border: 1px solid #2b3447;
+    padding: 0;
+}
+
+.plugin-chooser select,
+.visualizer-plugin-chooser select {
+    background: transparent;
+    border: none;
+    color: #ccdfff;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: 500;
+    min-width: 220px;
+    padding: 8px 16px;
+    border-radius: 40px;
+    transition: all 0.2s ease;
+}
+
+.plugin-chooser select:hover,
+.visualizer-plugin-chooser select:hover {
+    background-color: #1a2436;
+}
+
+.plugin-chooser select:focus,
+.visualizer-plugin-chooser select:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(109, 138, 224, 0.3);
+}
+
+.plugin-chooser select option,
+.visualizer-plugin-chooser select option {
+    background: #1a212e;
+    color: #e3eaff;
+    padding: 10px;
+}
+
+.plugin-chooser select option[value="none"],
+.visualizer-plugin-chooser select option[value="none"] {
+    color: #8f9bb5;
+}

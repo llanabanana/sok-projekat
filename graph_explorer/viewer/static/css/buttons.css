@@ -1,0 +1,40 @@
+button.text-btn {
+    width: 100px;
+    background: #252e3f;
+    border: 1px solid #3d4a64;
+    border-radius: 12px;
+    padding: 12px 24px;
+    color: #ccdfff;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+button:hover {
+    background: #2f3b52;
+    border-color: #5f7bbf;
+}
+
+.text-btn.load-graph-btn{
+    width: 180px;
+}
+
+.load-graph-btn {
+    width: 100%;
+    background: #252e3f;
+    border: 1px solid #3d4a64;
+    border-radius: 12px;
+    padding: 14px 24px;
+    color: #ccdfff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 10px;
+}
+
+.load-graph-btn:hover {
+    background: #2f3b52;
+    border-color: #5f7bbf;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
