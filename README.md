@@ -1,39 +1,49 @@
 # Graph Visualization Platform
 
-A plugin-based platform for loading, manipulating, and visualizing graph data. Built with Django and Python's entry point plugin system.
+A plugin-based platform for loading and visualizing graph data, built with Django.
+Developed as a university project for the SOK course (3rd year).
+
+## What it does
+
+The platform lets you load graph data from different file formats (JSON, YAML),
+visualize it in the browser using different rendering styles, and perform search
+and filter operations on the graph nodes.
+
+Plugins are discovered automatically using Python's entry point mechanism, so
+new data sources and visualizers can be added without changing the core code.
 
 ## Architecture
 
-The platform uses a modular plugin architecture with two plugin types:
+The project has three main layers:
 
-- **Data source plugins** -- load graph data from different formats (JSON, YAML)
-- **Visualizer plugins** -- render graphs in different visual styles (simple view, block view)
+- **api/** -- abstract interfaces for plugins and the graph data model (Node, Edge, Graph)
+- **project_platform/** -- core logic: plugin manager (singleton), graph operations (search/filter), workspace persistence
+- **graph_explorer/** -- Django web app that ties everything together with views, templates, and static files
 
-Plugins are discovered automatically via Python entry points and managed by a singleton `PluginManager`.
+Plugins live in `plugins/` as separate installable packages:
 
-### Project structure
+- `json_data_source_plugin` -- loads graphs from JSON files
+- `yaml_data_source_plugin` -- loads graphs from YAML files
+- `simple_visualizer` -- basic graph rendering
+- `block_visualizer` -- block-style graph rendering
+
+## Project structure
 
 ```
 sok-projekat/
-  api/                  # Core abstractions (DataSourcePlugin, VisualizerPlugin, Graph model)
-  project_platform/     # Platform core, plugin manager, workspace and graph operations
-  graph_explorer/       # Django web application (views, templates, static files)
-  plugins/              # Installable plugin packages
-    json_data_source_plugin/
-    yaml_data_source_plugin/
-    simple_visualizer/
-    block_visualizer/
-  tests/                # Unit tests
-  test_data/            # Sample graph data files
+    api/                    # Plugin interfaces and graph model
+    project_platform/       # Core platform logic, plugin manager, workspaces
+    graph_explorer/         # Django app (views, templates, static CSS/JS)
+    plugins/                # Installable plugin packages
+    tests/                  # Unit tests (unittest + pytest)
+    test_data/              # Sample JSON graph data
+    main.py                 # CLI entry point for testing plugin loading
+    requirements.txt
 ```
 
-## Requirements
-
-- Python 3.10+
-- Django >= 4.2, < 5.0
-- PyYAML 6.0.3
-
 ## Setup
+
+Requires Python 3.10+.
 
 ```bash
 python -m venv venv
@@ -43,7 +53,7 @@ venv\Scripts\activate           # Windows
 pip install -r requirements.txt
 ```
 
-Install plugins in development mode:
+Install the plugins in development mode:
 
 ```bash
 pip install -e plugins/json_data_source_plugin
@@ -54,17 +64,25 @@ pip install -e plugins/block_visualizer
 
 ## Running
 
-Start the Django development server:
+Start the Django dev server:
 
 ```bash
 cd graph_explorer
+python manage.py migrate
 python manage.py runserver
 ```
 
-Or run the CLI entry point to verify plugin loading:
+To verify plugins are loading correctly:
 
 ```bash
 python main.py
+```
+
+## Tests
+
+```bash
+python -m pytest tests/
+python -m unittest tests/test_graph_operations.py
 ```
 
 ## Team

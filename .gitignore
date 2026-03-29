@@ -15,6 +15,12 @@ build/
 # Django
 db.sqlite3
 *.log
+staticfiles/
+media/
+
+# Workspace saves
+workspaces/
+*.pkl
 
 # Environment variables
 .env
